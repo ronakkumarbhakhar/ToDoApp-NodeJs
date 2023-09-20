@@ -1,5 +1,5 @@
 const express = require('express')
-const {allTasksHandler,taskDetailHandler,newTaskHandler,authenticateHandler} = require('./mainController')
+const {allTasksHandler,taskDetailHandler,newTaskHandler,authenticateHandler,taskDoneHandler} = require('./mainController')
 
 const router = express.Router()
 
@@ -8,9 +8,11 @@ const router = express.Router()
 // authenticate middleware
 router.use(authenticateHandler);
 // this route gives us all tasks 
-router.get('/tasks', allTasksHandler);
+router.get('/', allTasksHandler);
 // this route will give us detail of particular task
 router.get('/tasks/detail/:taskid',taskDetailHandler);
+// this route will update detail of particular task
+router.get('/tasks/update/:taskid',taskDoneHandler);
 // this route will create new task
 router.post('/tasks/new',newTaskHandler);
 

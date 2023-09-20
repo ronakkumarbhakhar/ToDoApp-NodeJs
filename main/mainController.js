@@ -26,6 +26,27 @@ exports.newTaskHandler=async function(req, res){
     }
 }
 
+
+exports.taskDoneHandler=async function(req,res){
+  const taskid=req.params.taskid;
+  try{
+    const author=await userModel.findOne({email:req.user.email});
+    let query = await task.findOne({_id:taskid,author:author});
+    if(query!==null){
+      const date =new Date();
+      await query.updateOne({enddate:date,status:true});
+      query = await task.findOne({_id:taskid,author:author});
+      res.status(200).send(query);
+    }
+    else{
+      res.status(404).send("Task not found");
+    }
+  }catch(err){
+    res.status(404).json(err);
+    console.error(err);
+  }
+}
+
 exports.taskDetailHandler=async function(req, res){
     const taskid=req.params.taskid;
     try{
@@ -52,7 +73,6 @@ exports.authenticateHandler=async function(req,res,next){
     if(err){
       res.status(401).send("Invalid Token");
     }else{
-      console.log("user",user);
       req.user=user;
       next();
     }
